@@ -9,6 +9,7 @@ public class PageObjetManager {
     private HomePage homePage;
     private CartPage cartPage;
     private CompleteOrderPage completeOrderPage;
+    private ContactPage contactPage;
 
 
     public PageObjetManager(WebDriver driver){
@@ -48,5 +49,12 @@ public class PageObjetManager {
             completeOrderPage = new CompleteOrderPage(driver);
         }
         return completeOrderPage;
+    }
+
+    public ContactPage getContactPage() {
+        if (contactPage == null){
+            contactPage = new ContactPage(driver);
+        }
+        return contactPage;
     }
 }

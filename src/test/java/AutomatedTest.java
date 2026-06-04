@@ -3,7 +3,6 @@ import automation.page.SuiteListener;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.page.base.Base;
-import io.reactivex.rxjava3.internal.operators.flowable.BlockingFlowableLatest;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.Reporter;
@@ -13,27 +12,26 @@ import org.testng.annotations.Test;
 import org.testng.annotations.BeforeClass;
 
 import static automation.page.ExtentManager.test;
+import static automation.page.ExtentManager.extent;
 
 @Listeners(SuiteListener.class)
 public class AutomatedTest extends Base {
 
     private WebDriver driver;
-
-    ExtentReports extent;
+    
     ExtentSparkReporter spark;
     PageObjetManager manager;
 
 
-
     @BeforeClass
-    public void SetUp()throws Exception{
+    public void SetUp() throws Exception {
 
         spark = new ExtentSparkReporter("Automated.html");
         extent = new ExtentReports();
         extent.attachReporter(spark);
 
         Base base = new Base();
-        driver= base.chromeConectionDriver();
+        driver = base.chromeConectionDriver();
         driver.manage().window().maximize();
 
         ITestContext context = Reporter.getCurrentTestResult().getTestContext();
@@ -44,7 +42,7 @@ public class AutomatedTest extends Base {
     }
 
     @AfterClass
-    public void tearDown()throws Exception{
+    public void tearDown() throws Exception {
         extent.flush();
 
     }
@@ -78,7 +76,7 @@ public class AutomatedTest extends Base {
     }*/
 
     @Test(priority = 2)
-    public void Login()throws Exception{
+    public void Login() throws Exception {
         try {
             test = extent.createTest("Login");
             String url = getProperty("url");
@@ -89,13 +87,14 @@ public class AutomatedTest extends Base {
             manager.getLoginPage();
             manager.getLoginPage().Login(email, password);
             test.pass("Ingreso de login exitosamente");
-        }catch (Exception e) {
+        } catch (Exception e) {
             test.fail("Error en el login");
+            throw e;
         }
     }
 
     @Test(priority = 3)
-    public void HomePage(){
+    public void HomePage() throws Exception {
         try {
             test = extent.createTest("Home");
             manager.getHomePage().limpiarPantallaDeAnuncios();
@@ -103,20 +102,23 @@ public class AutomatedTest extends Base {
             test.pass("Ingreso al home exitosamente");
         } catch (Exception e) {
             test.fail("Error en el home");
+            throw e;
         }
     }
 
-    @Test (priority = 4)
-    public void Cart()throws Exception{
+    @Test(priority = 4)
+    public void Cart() throws Exception {
         try {
             test = extent.createTest("Carrito");
             manager.getCartPage().openCart();
             test.pass("Ingreso al carrito exitosamente");
         } catch (Exception e) {
             test.fail("Error en el carrito");
+            throw e;
         }
 
     }
+
     @Test(priority = 5)
     public void CompleteOrder() throws Exception {
         try {
@@ -134,6 +136,30 @@ public class AutomatedTest extends Base {
             test.pass("Ingreso a completar la orden exitosamente");
         } catch (Exception e) {
             test.fail("Error en completar la orden");
+            throw e;
         }
     }
+
+    @Test(priority = 6)
+    public void Contact() throws Exception {
+        try {
+            test = extent.createTest("Página de contacto");
+            String url = getProperty("url");
+            driver.get(url);
+            String namecontact = getProperty("namecontact");
+            String emailcontact = getProperty("emailcontact");
+            String subject = getProperty("subject");
+            String menssage = getProperty("menssage");
+
+            manager.getContactPage().Contact(namecontact, emailcontact, subject, menssage);
+
+            test.pass("Se ingreso correctamente a la seccion de contacto");
+
+        } catch (Exception e) {
+            test.fail("No se pudo ingresar a la página de contacto");
+            throw e;
+        }
+
+    }
 }
+

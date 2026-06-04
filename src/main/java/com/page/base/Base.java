@@ -25,15 +25,8 @@ public class Base {
 
     public WebDriver chromeConectionDriver(){
         ChromeOptions options = new ChromeOptions();
-        //File Extensionpatch = new File("src/main/resources/Adblock.crx");
-        //options.addExtensions(Extensionpatch);
-
-        // Bloquea pop-ups y notificaciones que suelen ser publicidad
         options.addArguments("--disable-popup-blocking");
         options.addArguments("--disable-notifications");
-
-        // Desactiva el mensaje de "Software automatizado" que a veces mueve los elementos
-        //options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
 
         driver = new ChromeDriver(options);
         return driver;
@@ -142,5 +135,10 @@ public class Base {
         //Se copia el archivo a la carpeta
         FileUtils.copyFile(source, finaldestination);
         return  destination;
+    }
+
+    public void acceptAlert(){
+        driver.switchTo().alert().accept();
+
     }
 }
